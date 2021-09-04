@@ -1,0 +1,46 @@
+---
+exp_name: Liangwei
+exp_dir: exp/Liangwei
+runner: LiangweiRunner
+use_gpu: true
+device: cpu
+gpus: [0]
+seed: 1234
+dataset:
+  name: hcp_first_data
+  loader_name: HCPData
+  idx2names_path: /home/matin/school/Amir_Omidvarnia/data_idx2name_train.pkl
+  data_folder_path: /home/matin/school/Amir_Omidvarnia/gender_data
+  transform: HCPTransform
+  target_transform: ToTensor
+  train_ratio: 0.8
+model:
+  name: Liangwei
+  cnn_in_channels: 64620
+  cnn_out_channels: 32
+  rnn_hidden_size: 32
+  window_size: 96
+  max_pool_size: 5
+train:
+  optimizer: Adam
+  criterion: gender_loss
+  lr_decay: 0.1
+  lr_decay_epoch: [100000000] # no decay
+  num_workers: 0
+  max_epoch: 20000
+  batch_size: 10
+  validation_iteration: 7
+  display_iter: 5
+  snapshot_epoch: 20
+  lr: 1.0e-4
+  wd: 0.0e-4
+  momentum: 0.9
+  is_resume: false
+  resume_epoch: 5000
+  resume_dir: # exp/Liangwei/your_exp_folder
+  resume_model: # model_snapshot_0005000.pth
+test:  
+  batch_size: 1
+  num_workers: 0
+  test_model_dir: exp/Liangwei/Liangwei_hcp_first_data_2021-Sep-04-09-21-32_44879
+  test_model_name: model_snapshot_0000060.pth
