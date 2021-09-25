@@ -78,7 +78,7 @@ class Liangwei(nn.Module):
         # x: batch_size * 1 * rnn_hidden_size
         x = self.fc(x)
         # x: batch_size * 1 * 1
-        x = x.view(-1, 1)
+        x = x.view(-1, 1)  # final score of the model
         # x: batch_size * 1
         return x
 
