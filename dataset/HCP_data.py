@@ -30,7 +30,7 @@ class HCPData(Dataset):
             ts_data = self.transform(ts_data)
         if self.target_transform:
             label = self.target_transform(label)
-        return ts_data, label
+        return ts_data, label, self.idx2names[idx]
 
 
 class HCPTransform(object):

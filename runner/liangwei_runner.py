@@ -114,7 +114,7 @@ class LiangweiRunner(object):
             lr_scheduler.step()
             optimizer.zero_grad()
 
-            for iteration, (data, label) in enumerate(train_loader):
+            for iteration, (data, label, _) in enumerate(train_loader):
                 optimizer.zero_grad()
                 output = model(data.to(self.device))
                 criterion = eval(self.train_conf.criterion)
@@ -129,7 +129,7 @@ class LiangweiRunner(object):
                     val_loss = 0
                     model.eval()
 
-                    for data, label in val_loader:
+                    for data, label, _ in val_loader:
                         output = model(data.to(self.device))
                         loss = criterion(output, label.to(self.device))
                         val_loss += loss.item() * data.size()[0]
@@ -184,13 +184,20 @@ class LiangweiRunner(object):
 
         model_prediction = []
         target = []
-        for data, label in test_loader:
+        sigmoid_results = {}
+        for data, label, subjects in test_loader:
             output = model(data.to(self.device))
+            for i, subject in enumerate(subjects):
+                sigmoid_results[subject.split('.')[0]] = nn.Sigmoid()(output[i]).detach().numpy()[0]
             output = torch.heaviside(output.view(output.size()[0]), torch.tensor(0).float())
             model_prediction += output.tolist()
             target += label.view(label.size()[0]).tolist()
 
-        print(model_prediction, target)
+        save_path = '/home/matin/school/Amir_Omidvarnia/Sigmoid_outputs'
+        file_to_write = open(save_path + '.pkl', "wb")
+        pickle.dump(sigmoid_results, file_to_write)
+
+        # print(model_prediction, target)
         print(classification_report(target, model_prediction))
 
         print('acc is', accuracy_score(target, model_prediction))
