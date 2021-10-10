@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-__all__ = ['Liangwei', 'gender_loss', 'intelligence_loss']
+__all__ = ['Liangwei', 'classification_loss', 'regression_loss']
 
 
 class ConvLayer(nn.Module):
@@ -83,14 +83,14 @@ class Liangwei(nn.Module):
         return x
 
 
-def gender_loss(model_output, labels):
+def classification_loss(model_output, labels):
     # model_output: batch_size * 1
     # labels: batch_size * 1
     criterion = nn.BCEWithLogitsLoss()
     return criterion(model_output, labels)
 
 
-def intelligence_loss(model_output, target):
+def regression_loss(model_output, target):
     # model_output: batch_size * 1
     # target: batch_size * 1
     criterion = nn.MSELoss()

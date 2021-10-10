@@ -42,13 +42,11 @@ class LiangweiRunner(object):
     def train(self):
         # create data loader
         train_dataset = eval(self.dataset_conf.loader_name)(self.config)
-        print('here***', len(train_dataset))
         num_train = len(train_dataset)
         indices = list(range(num_train))
         np.random.shuffle(indices)
         split = int(np.floor(num_train * self.dataset_conf.train_ratio))
         train_index, val_index = indices[:split], indices[split:]
-        print('indices are:', train_index, val_index)
 
         train_sampler, val_sampler = SubsetRandomSampler(train_index), SubsetRandomSampler(val_index)
 
@@ -107,7 +105,7 @@ class LiangweiRunner(object):
             resume_epoch = self.train_conf.resume_epoch
 
         # Training Loop
-        results = defaultdict(list)
+        minimum_loss = np.inf
         for epoch in range(resume_epoch, self.train_conf.max_epoch):
             train_loss = 0
             model.train()
@@ -140,24 +138,24 @@ class LiangweiRunner(object):
                     model.train(is_training)
 
                 self.writer.add_scalar('train_loss', loss, iteration)
-                results['train_loss'] += [train_loss]
-                results['train_step'] += [iteration]
 
                 if iteration % self.train_conf.display_iter == 0:
                     logger.info(
-                        "Loss @ epoch {:04d} iteration {:08d} = {} ###".format(epoch + 1, iteration, loss.item()))
+                        "Training Loss @ epoch {:04d} iteration {:08d} = {} ###".format(epoch + 1, iteration, loss.item()))
 
             avg_train_loss = train_loss / len(train_index)
-            logger.info(
-                "Total avg Loss @ the end of epoch {:04d} = {} ***".format(epoch + 1, avg_train_loss))
+            logger.info("Total avg Loss @ the end of epoch {:04d} = {} ***".format(epoch + 1, avg_train_loss))
 
             # snapshot model
             if (epoch + 1) % self.train_conf.snapshot_epoch == 0:
-                logger.info("Saving Snapshot @ epoch {:04d}".format(epoch + 1))
-                snapshot(model.module if self.use_gpu else model, optimizer, self.config, epoch + 1,
-                         scheduler=lr_scheduler)
+                if train_loss < minimum_loss:
+                    minimum_loss = train_loss
+                    logger.info("Saving Snapshot @ epoch {:04d}".format(epoch + 1))
+                    snapshot(model.module if self.use_gpu else model, optimizer, self.config, epoch + 1,
+                             scheduler=lr_scheduler)
+                else:
+                    logger.info("No need to save @ epoch {:04d} !!!".format(epoch + 1))
 
-        pickle.dump(results, open(os.path.join(self.config.save_dir, 'train_stats.p'), 'wb'))
         self.writer.close()
 
         return 1

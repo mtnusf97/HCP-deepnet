@@ -7,6 +7,7 @@ import pickle
 class HCPData(Dataset):
     def __init__(self, config):
         self.config = config
+        self.target = config.dataset.name
         self.idx2names_path = config.dataset.idx2names_path
         self.data_folder_path = config.dataset.data_folder_path
         with open(self.idx2names_path, 'rb') as f:
@@ -25,7 +26,10 @@ class HCPData(Dataset):
         with open(subject_path, 'rb') as f:
             data = pickle.load(f)
         ts_data = data['data']
-        label = data['target']
+        label = data[self.target]
+        # label = data[self.target]
+        # print('label is: ***', type(label))
+        # print('label is: ***', label)
         if self.transform:
             ts_data = self.transform(ts_data)
         if self.target_transform:
