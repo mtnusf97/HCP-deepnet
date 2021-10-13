@@ -3,7 +3,7 @@ exp_name: Liangwei
 exp_dir: exp/Liangwei/Flanker_Unadj #address were model will be saved
 runner: LiangweiRunner #runner class for this configuration (from runner folder)
 use_gpu: true
-device: gpu
+device: cuda:0
 gpus: [0]
 seed: 1234
 dataset:

@@ -6,7 +6,7 @@ dataset:
   target_transform: ToTensor
   train_ratio: 0.8
   transform: HCPTransform
-device: gpu
+device: cuda:0
 exp_dir: exp/Liangwei/PercStress_Unadj
 exp_name: Liangwei
 gpus:
