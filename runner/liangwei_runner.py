@@ -186,13 +186,24 @@ class LiangweiRunner(object):
 
         model_prediction = []
         target = []
-        for data, label in test_loader:
-            output = model(data.to(self.device))
-            output = torch.heaviside(output.view(output.size()[0]), torch.tensor(0).float())
-            model_prediction += output.tolist()
-            target += label.view(label.size()[0]).tolist()
+        if self.config.dataset.name == 'gender':
+            for data, label in test_loader:
+                output = model(data.to(self.device))
+                output = torch.heaviside(output.view(output.size()[0]), torch.tensor(0).float())
+                model_prediction += output.tolist()
+                target += label.view(label.size()[0]).tolist()
+            print(model_prediction, target)
+            print(classification_report(target, model_prediction))
 
-        print(model_prediction, target)
-        print(classification_report(target, model_prediction))
+            print('acc is', accuracy_score(target, model_prediction))
+        else:
+            for data, label in test_loader:
+                output = model(data.to(self.device))
+                # output = torch.heaviside(output.view(output.size()[0]), torch.tensor(0).float())
+                model_prediction += output.tolist()
+                target += label.view(label.size()[0]).tolist()
 
-        print('acc is', accuracy_score(target, model_prediction))
+            model_prediction = np.array(model_prediction)
+            model_prediction = model_prediction.T
+            target = np.array(target)
+            print(np.corrcoef(target, model_prediction))
