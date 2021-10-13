@@ -9,8 +9,8 @@ seed: 1234
 dataset:
   name: Flanker_Unadj
   loader_name: HCPData #loader class for this configuration (from dataset folder)
-  idx2names_path: /home/matin/school/Amir_Omidvarnia/data_idx2name_train.pkl #dictionary for indices mapping to the names of subjects
-  data_folder_path: /home/matin/school/Amir_Omidvarnia/prepared_data #address were data can be found
+  idx2names_path: /home/yousefabadi/amir/data_idx2name_train.pkl #dictionary for indices mapping to the names of subjects
+  data_folder_path: /home/yousefabadi/amir/prepared_data #address were data can be found
   transform: HCPTransform #transform class of train data for this configuration (from dataset folder)
   target_transform: ToTensor #transform class of targets of the data for this configuration (from dataset folder)
   train_ratio: 0.8
