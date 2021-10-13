@@ -1,6 +1,6 @@
 dataset:
-  data_folder_path: /home/matin/school/Amir_Omidvarnia/prepared_data
-  idx2names_path: /home/matin/school/Amir_Omidvarnia/data_idx2name_train.pkl
+  data_folder_path: /home/yousefabadi/amir/prepared_data
+  idx2names_path: /home/yousefabadi/amir/data_idx2name_train.pkl
   loader_name: HCPData
   name: SelfEff_Unadj
   target_transform: ToTensor
