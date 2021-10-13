@@ -9,7 +9,7 @@ from tensorboardX import SummaryWriter
 from model import *
 from dataset import *
 from utils.logger import get_logger
-from utils.train_helper import data_to_gpu, snapshot, load_model, EarlyStopper
+from utils.train_helper import snapshot, load_model
 from utils.data_parallel import DataParallel
 from torch.utils.data import SubsetRandomSampler
 from sklearn.metrics import classification_report, accuracy_score
@@ -105,7 +105,8 @@ class LiangweiRunner(object):
             resume_epoch = self.train_conf.resume_epoch
 
         # Training Loop
-        minimum_loss = np.inf
+        minimum_val_loss = np.inf
+        total_iteration = 0
         for epoch in range(resume_epoch, self.train_conf.max_epoch):
             train_loss = 0
             model.train()
@@ -113,6 +114,7 @@ class LiangweiRunner(object):
             optimizer.zero_grad()
 
             for iteration, (data, label) in enumerate(train_loader):
+                total_iteration += 1
                 optimizer.zero_grad()
                 output = model(data.to(self.device))
                 criterion = eval(self.train_conf.criterion)
@@ -122,37 +124,39 @@ class LiangweiRunner(object):
 
                 train_loss += loss.item() * data.size()[0]
 
-                if (iteration + 1) % self.train_conf.validation_iteration == 0:
-                    is_training = model.training
-                    val_loss = 0
-                    model.eval()
-
-                    for data, label in val_loader:
-                        output = model(data.to(self.device))
-                        loss = criterion(output, label.to(self.device))
-                        val_loss += loss.item() * data.size()[0]
-
-                    val_loss /= len(val_index)
-                    logger.info(
-                        "Validation Loss @ epoch {:04d} iteration {:08d} = {}".format(epoch + 1, iteration, val_loss))
-                    model.train(is_training)
-
-                self.writer.add_scalar('train_loss', loss, iteration)
+                self.writer.add_scalar(self.dataset_conf.name + '_training_loss', loss, total_iteration)
 
                 if iteration % self.train_conf.display_iter == 0:
                     logger.info(
                         "Training Loss @ epoch {:04d} iteration {:08d} = {} ###".format(epoch + 1, iteration, loss.item()))
 
+            is_training = model.training
+            val_loss = 0
+            model.eval()
+
+            for data, label in val_loader:
+                output = model(data.to(self.device))
+                loss = criterion(output, label.to(self.device))
+                val_loss += loss.item() * data.size()[0]
+
+            val_loss /= len(val_index)
+            logger.info(
+                "Validation Loss @ epoch {:04d} = {}".format(epoch + 1, val_loss))
+            self.writer.add_scalar(self.dataset_conf.name + '_validation_loss', val_loss, epoch + 1)
+
+            model.train(is_training)
+
             avg_train_loss = train_loss / len(train_index)
             logger.info("Total avg Loss @ the end of epoch {:04d} = {} ***".format(epoch + 1, avg_train_loss))
+            self.writer.add_scalar(self.dataset_conf.name + '_avg_training_loss', avg_train_loss, epoch + 1)
 
             # snapshot model
             if (epoch + 1) % self.train_conf.snapshot_epoch == 0:
-                if train_loss < minimum_loss:
-                    minimum_loss = train_loss
+                if val_loss < minimum_val_loss:
+                    minimum_val_loss = val_loss
                     logger.info("Saving Snapshot @ epoch {:04d}".format(epoch + 1))
                     snapshot(model.module if self.use_gpu else model, optimizer, self.config, epoch + 1,
-                             scheduler=lr_scheduler)
+                             scheduler=lr_scheduler, tag=self.dataset_conf.name)
                 else:
                     logger.info("No need to save @ epoch {:04d} !!!".format(epoch + 1))
 
