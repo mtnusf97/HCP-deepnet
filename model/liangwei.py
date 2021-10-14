@@ -11,11 +11,11 @@ class ConvLayer(nn.Module):
         self.in_channels = in_channels
         self.out_channels = out_channels
         self.conv4 = nn.Conv1d(in_channels=self.in_channels, out_channels=self.out_channels, kernel_size=4,
-                               padding='same')
+                               padding=2)
         self.conv8 = nn.Conv1d(in_channels=self.in_channels, out_channels=self.out_channels, kernel_size=8,
-                               padding='same')
+                               padding=4)
         self.conv16 = nn.Conv1d(in_channels=self.in_channels, out_channels=self.out_channels, kernel_size=16,
-                                padding='same')
+                                padding=8)
         self.max_pool_size = max_pool_size
         self.maxpool = nn.MaxPool1d(self.max_pool_size)
 
