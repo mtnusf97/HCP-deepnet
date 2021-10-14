@@ -155,7 +155,9 @@ class LiangweiRunner(object):
                 if val_loss < minimum_val_loss:
                     minimum_val_loss = val_loss
                     logger.info("Saving Snapshot @ epoch {:04d}".format(epoch + 1))
-                    snapshot(model.module if self.use_gpu else model, optimizer, self.config, epoch + 1,
+                    # snapshot(model.module if self.use_gpu else model, optimizer, self.config, epoch + 1,
+                    #          scheduler=lr_scheduler, tag=self.dataset_conf.name)
+                    snapshot(model, optimizer, self.config, epoch + 1,
                              scheduler=lr_scheduler, tag=self.dataset_conf.name)
                 else:
                     logger.info("No need to save @ epoch {:04d} !!!".format(epoch + 1))
