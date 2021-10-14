@@ -62,10 +62,10 @@ def get_config(config_file, exp_dir=None, is_test=False):
     config.dataset.idx2names_path = config.dataset.idx2names_path_test if is_test else config.dataset.idx2names_path_train
 
     # snapshot hyperparameters
-    mkdir(config.exp_dir)
-    mkdir(config.save_dir)
-
-    yaml.dump(edict2dict(config), open(save_name, 'w'), default_flow_style=False)
+    if not is_test:
+        mkdir(config.exp_dir)
+        mkdir(config.save_dir)
+        yaml.dump(edict2dict(config), open(save_name, 'w'), default_flow_style=False)
 
     return config
 
