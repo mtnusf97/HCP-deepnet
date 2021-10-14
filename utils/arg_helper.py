@@ -54,6 +54,12 @@ def get_config(config_file, exp_dir=None, is_test=False):
         config.save_dir = os.path.join(config.exp_dir, config.exp_name)
         save_name = os.path.join(config.save_dir, 'config.yaml')
 
+    config.test.test_model_dir = config.save_dir
+    yaml.dump(edict2dict(config), open(config_file, 'w'), default_flow_style=False)
+
+    # config['idx2names_path'] = config.dataset.idx2names_path_test if is_test else config.dataset.idx2names_path_train
+    config.dataset.idx2names_path = config.dataset.idx2names_path_test if is_test else config.dataset.idx2names_path_train
+
     # snapshot hyperparameters
     mkdir(config.exp_dir)
     mkdir(config.save_dir)

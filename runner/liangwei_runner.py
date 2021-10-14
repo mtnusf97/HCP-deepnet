@@ -62,7 +62,7 @@ class LiangweiRunner(object):
             batch_size=self.train_conf.batch_size,
             num_workers=self.train_conf.num_workers,
             drop_last=False,
-            sampler=train_sampler)
+            sampler=val_sampler)
 
         # create models
         model = eval(self.model_conf.name)(self.config)
