@@ -68,7 +68,8 @@ class LiangweiRunner(object):
         model = eval(self.model_conf.name)(self.config)
 
         if self.use_gpu:
-            model = DataParallel(model, device_ids=self.gpus).to(self.device)
+            # model = DataParallel(model, device_ids=self.gpus).to(self.device)
+            model = model.to(self.device)
 
         # create optimizer
         params = filter(lambda p: p.requires_grad, model.parameters())
@@ -175,7 +176,8 @@ class LiangweiRunner(object):
         load_model(model, model_file, self.device)
 
         if self.use_gpu:
-            model = nn.DataParallel(model, device_ids=self.gpus).to(self.device)
+            # model = nn.DataParallel(model, device_ids=self.gpus).to(self.device)
+            model = model.to(self.device)
 
         model.eval()
 
