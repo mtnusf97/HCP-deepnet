@@ -169,6 +169,7 @@ class LiangweiRunner(object):
 
     def test(self):
         self.config.save_dir = self.test_conf.test_model_dir
+        self.writer = SummaryWriter(self.config.save_dir)
 
         # load model
         model = eval(self.model_conf.name)(self.config)
@@ -200,6 +201,8 @@ class LiangweiRunner(object):
             print(classification_report(target, model_prediction))
 
             print('acc is', accuracy_score(target, model_prediction))
+            self.writer.add_text(self.dataset_conf.name, 'accuracy on test is:' +
+                                 str(accuracy_score(target, model_prediction)))
         else:
             for data, label in test_loader:
                 output = model(data.to(self.device))
@@ -210,4 +213,9 @@ class LiangweiRunner(object):
             model_prediction = np.array(model_prediction)
             model_prediction = model_prediction.T
             target = np.array(target)
-            print(np.corrcoef(target, model_prediction))
+            corr = np.corrcoef(target, model_prediction)
+            self.writer.add_text(self.dataset_conf.name, 'correlation on test is:' +
+                                 str(corr[0][1]))
+            print(corr)
+
+        self.writer.close()
