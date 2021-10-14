@@ -62,6 +62,7 @@ for measure in behav_measures:
     base_yaml['device'] = 'cuda:0'
     base_yaml['test']['test_model_name'] = 'model_snapshot_' + measure + '.pth'
     base_yaml['dataset']['data_folder_path'] = '/home/yousefabadi/amir/prepared_data'
-    base_yaml['dataset']['idx2names_path'] = '/home/yousefabadi/amir/data_idx2name_train.pkl'
+    base_yaml['dataset']['idx2names_path_train'] = '/home/yousefabadi/amir/data_idx2name_train.pkl'
+    base_yaml['dataset']['idx2names_path_test'] = '/home/yousefabadi/amir/data_idx2name_test.pkl'
     with io.open('liangwei_' + measure + '.yaml', 'w', encoding='utf8') as outfile:
         yaml.dump(base_yaml, outfile, default_flow_style=False, allow_unicode=True)
