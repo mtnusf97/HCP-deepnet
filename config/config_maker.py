@@ -5,7 +5,6 @@ with open("example.yaml", 'r') as stream:
     base_yaml = yaml.safe_load(stream)
 
 behav_measures = [
-    'Subject',
     'Gender',
     'Flanker_Unadj',
     'WM_Task_Acc',
