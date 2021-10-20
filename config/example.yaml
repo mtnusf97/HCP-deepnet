@@ -18,8 +18,12 @@ dataset:
 model:
   name: Liangwei #model class for this configuration (from model folder)
   cnn_in_channels: 64620
+  cnn_out_channels_l1: 32
+  cnn_out_channels_l2: 32
+  cnn_out_channels_l3: 16
   cnn_out_channels: 32
   rnn_hidden_size: 32
+  rnn_input_size: 64620
   window_size: 96 #window size for dynamic connectivity usages
   max_pool_size: 5
 train:
