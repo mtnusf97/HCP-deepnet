@@ -214,8 +214,16 @@ class LiangweiRunner(object):
             model_prediction = model_prediction.T
             target = np.array(target)
             corr = np.corrcoef(target, model_prediction)
-            self.writer.add_text(self.dataset_conf.name, 'correlation on test is:' +
+            self.writer.add_text(self.dataset_conf.name + self.model_conf.name, 'correlation on test is:' +
                                  str(corr[0][1]))
+
+            # add this result to all other results
+            all_results_file = open(self.test_conf.all_results_dictionary, "rb")
+            all_results_dict = pickle.load(all_results_file)
+            all_results_dict[self.model_conf.name][self.dataset_conf.name] = corr[0][1]
+            pickle.dump(all_results_dict, all_results_file)
+            all_results_file.close()
+
             print(corr)
 
         self.writer.close()

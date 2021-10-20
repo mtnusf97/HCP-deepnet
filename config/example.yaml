@@ -44,3 +44,4 @@ test:
   num_workers: 0
   test_model_dir: #?
   test_model_name: model_snapshot_0000060.pth
+  all_results_dict: /home/matin/school/Amir_Omidvarnia/all_results.pkl
