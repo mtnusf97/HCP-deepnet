@@ -55,7 +55,7 @@ class Liangwei(nn.Module):
         self.config = config
         self.cnn_in_channels = config.model.cnn_in_channels
         self.cnn_out_channels = config.model.cnn_out_channels
-        self.rnn_input_size = config.model. cnn_out_channels * 3
+        self.rnn_input_size = config.model.cnn_out_channels * 3
         self.rnn_hidden_size = config.model.rnn_hidden_size
         self.window_size = config.model.window_size
         self.max_pool_size = config.model.max_pool_size
