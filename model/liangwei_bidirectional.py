@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-__all__ = ['LiangweiBidrectional', 'classification_loss', 'regression_loss']
+__all__ = ['LiangweiBidirectional', 'classification_loss', 'regression_loss']
 
 
 class ConvLayer(nn.Module):
@@ -48,10 +48,10 @@ class LSTMLayer(nn.Module):
         return x
 
 
-class LiangweiBidrectional(nn.Module):
+class LiangweiBidirectional(nn.Module):
 
     def __init__(self, config):
-        super(LiangweiBidrectional, self).__init__()
+        super(LiangweiBidirectional, self).__init__()
         self.config = config
         self.cnn_in_channels = config.model.cnn_in_channels
         self.cnn_out_channels = config.model.cnn_out_channels
