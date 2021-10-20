@@ -219,14 +219,14 @@ class LiangweiRunner(object):
 
             # add this result to all other results
             try:
-                all_results_file = open(self.test_conf.all_results_dictionary, "rb")
+                all_results_file = open(self.test_conf.all_results_dict, "rb")
                 all_results_dict = pickle.load(all_results_file)
                 all_results_dict[self.model_conf.name][self.dataset_conf.name] = corr[0][1]
-                all_results_file = open(self.test_conf.all_results_dictionary, "wb")
+                all_results_file = open(self.test_conf.all_results_dict, "wb")
                 pickle.dump(all_results_dict, all_results_file)
                 all_results_file.close()
             except:
-                all_results_file = open(self.test_conf.all_results_dictionary, "wb")
+                all_results_file = open(self.test_conf.all_results_dict, "wb")
                 all_results_dict = {}
                 all_results_dict[self.model_conf.name][self.dataset_conf.name] = corr[0][1]
                 pickle.dump(all_results_dict, all_results_file)
