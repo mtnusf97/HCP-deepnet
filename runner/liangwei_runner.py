@@ -7,6 +7,7 @@ import torch.optim as optim
 from tensorboardX import SummaryWriter
 
 from model import *
+from model.GCN import *
 from dataset import *
 from utils.logger import get_logger
 from utils.train_helper import snapshot, load_model
@@ -129,7 +130,8 @@ class LiangweiRunner(object):
 
                 if iteration % self.train_conf.display_iter == 0:
                     logger.info(
-                        "Training Loss @ epoch {:04d} iteration {:08d} = {} ###".format(epoch + 1, iteration, loss.item()))
+                        "Training Loss @ epoch {:04d} iteration {:08d} = {} ###".format(epoch + 1, iteration,
+                                                                                        loss.item()))
 
             is_training = model.training
             val_loss = 0
