@@ -1,6 +1,6 @@
 # HCP-deepnet
 _____
-### this is a repository for HCP-deepnet project!!
+### this is a repository to predict behavioral measures of HCP subjects!!!
 
 ## Visualization
 
